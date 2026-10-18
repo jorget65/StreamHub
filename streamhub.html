@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamHub | My Streaming Sites</title>
+  <style>
+    :root { --bg: #090d19; --panel: #121a2d; --text: #f5f7ff; --muted: #aab5d0; --accent: #8b5cf6; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(ellipse at top left, #27205c 0, transparent 36%),
+                  radial-gradient(ellipse at bottom right, #102f67 0, transparent 32%), var(--bg);
+    }
+    header { text-align: center; padding: 42px 20px 22px; }
+    .brand { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -1.5px; }
+    .brand span { color: #a78bfa; }
+    header p { color: var(--muted); margin: 12px auto 0; max-width: 620px; line-height: 1.6; }
+    main { width: min(1120px, 94%); margin: 0 auto 55px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0 28px; }
+    #search {
+      width: min(360px, 100%); padding: 13px 16px; border: 1px solid #34415e;
+      border-radius: 12px; background: #10182a; color: white; font-size: 1rem; outline: none;
+    }
+    #search:focus { border-color: #a78bfa; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 20px; }
+    .card {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      text-decoration: none; color: var(--text); padding: 24px 16px 20px;
+      border: 1px solid #27334e; border-radius: 20px; background: rgba(18, 26, 45, .88);
+      min-height: 235px; transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .card:hover, .card:focus-visible { transform: translateY(-5px); border-color: #9b87ff; background: #19223a; outline: none; }
+    .icon-wrap {
+      width: 112px; height: 112px; border-radius: 25px; overflow: hidden;
+      display: grid; place-items: center; margin-bottom: 16px;
+      background: linear-gradient(145deg, #7c3aed, #2563eb); box-shadow: 0 10px 30px #0005;
+    }
+    .icon-wrap img { width: 100%; height: 100%; object-fit: contain; }
+    .fallback { font-size: 3.2rem; font-weight: 800; }
+    .card h2 { margin: 0 0 8px; font-size: 1.12rem; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.45; font-size: .92rem; }
+    .hint { text-align: center; color: var(--muted); font-size: .9rem; margin: 28px 0 0; }
+    footer { text-align: center; color: #8390ad; font-size: .85rem; padding: 0 16px 28px; }
+    @media (max-width: 480px) { header { padding-top: 30px; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .card { padding: 17px 10px; min-height: 205px; } .icon-wrap { width: 82px; height: 82px; border-radius: 19px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">▶ Stream<span>Hub</span></div>
+    <p>All your favorite streaming platforms in one place. Choose a big icon to open a website.</p>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search platforms..." aria-label="Search platforms">
+    </div>
+    <section class="grid" id="platformGrid" aria-label="Streaming platforms"></section>
+    <p class="hint">Tip: Use the list in this file to add your own websites and icons.</p>
+  </main>
+  <footer>StreamHub is an independent website launcher and is not affiliated with the services listed.</footer>
+
+  <script>
+    // ==========================================================
+    // EDIT YOUR WEBSITES HERE:
+    // 1) Change name to the platform name.
+    // 2) Change url to the website you want to open.
+    // 3) Change icon to a direct image URL (PNG, JPG, or SVG).
+    // 4) Change description if you want.
+    // To add a platform, copy one { ... } block and edit its details.
+    // ==========================================================
+    const platforms = [
+      {
+        name: "Cuevana",
+        url: "https://cuevana3r.pro",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdbgXQn8Q-eGi-g7KPVIW02j0LvpHoz8ppPA2-x_FV_p4ntdPo8sIcMrTW&s=10",
+        description: "Movies and TV Shows in Spanish for Free!"
+      },
+            {
+        name: "Atlantic",
+        url: "https://www.disneyplus.com",
+        icon: "https://static.vecteezy.com/system/resources/previews/015/576/178/non_2x/a-letter-logo-template-vector.jpg",
+        description: "TV Shows, Movies, and Dramas for Free!"
+      },
+      {
+        name: "Netflix",
+        url: "https://nippleflix.com",
+        icon: "https://nippleflix.live/logo.png",
+        description: "Movies, TV shows, and Anime for Free!"
+      },
+      {
+        name: "Nova",
+        url: "https://novahd.cc",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8vxpqvpLGE6NRNgRFZgf26hFcNJvpqt7EIqL_5qRux7aatu4lgHQmHcc&s=10",
+        description: "TV, Movies, and Different Topics for Free!"
+      },
+      {
+        name: "Cinemove",
+        url: "https://cinemove.cc",
+        icon: "https://media.istockphoto.com/id/1479726048/vector/minimal-cm-logo-icon-of-a-mc-letter-on-a-luxury-background-logo-idea-based-on-the-cm.jpg?s=612x612&w=0&k=20&c=F2JivWF06R9SLjXN1GGqKcROYX09Q-fALuISv5TSt-E=",
+        description: "Movies, Series, and TV Shows all Free!"
+      },
+      {
+        name: "Movish",
+        url: "https://movish.to",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgTxVq17mRWpXPVjiNKsxrJ-veMXcWTA9DB2QLDOHziaR2DVRirrgALiL5&s=10",
+        description: "TV Shows, Movies, and Originals"
+      },
+      {
+        name: "Bingr",
+        url: "https://bingr.one",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDbRC7VFzxuLZHtgVFlo2h6gEH8wwAln7nrDDceOvWi6rCd489wGO1cVcF&s=10",
+        description: "Anime, Movies, and TV Shows Instantly!"
+      },
+      {
+        name: "Z Stream",
+        url: "https://zxcstream.com",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5TqnhXX_a9JL_uN4F2yJg3l2j_MS8i6Xzw-EP8O1kdO1vDdGtk12mkq5G&s=100",
+        description: "Romance, TV Shows, and Movies for Free!"
+      },
+      {
+        name: "Cinetaro",
+        url: "https://cinetaro.to",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnFF4cBWKuxX9w_aLTRpQ16LpJEWtI1VU2EThawLy4snXTQY2FfVjpbR2m&s=10",
+        description: "Romance, TV Shows, Movies, and Anime"
+      },
+           {
+        name: "Moviebite",
+        url: "https://moviebite.org",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoNiDmIZEvBf5cqrvQCEDKv94xCbTA8y0vIbxJ8WfipayakJqUC5A3dis&s=10",
+        description: "Originals, Anime, Movies, and TV Shows"
+      },
+    ];
+    // ==========================================================
+    // You normally don't need to edit anything below this line.
+    // ==========================================================
+
+    const grid = document.getElementById("platformGrid");
+    const search = document.getElementById("search");
+
+    function renderPlatforms(filter = "") {
+      grid.replaceChildren();
+      const matchingPlatforms = platforms.filter(platform =>
+        (platform.name + " " + platform.description).toLowerCase().includes(filter.toLowerCase())
+      );
+
+      matchingPlatforms.forEach(platform => {
+        const link = document.createElement("a");
+        link.className = "card";
+        link.href = platform.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.setAttribute("aria-label", `Open ${platform.name} in a new tab`);
+
+        const iconWrap = document.createElement("div");
+        iconWrap.className = "icon-wrap";
+        const img = document.createElement("img");
+        img.src = platform.icon;
+        img.alt = `${platform.name} icon`;
+        img.loading = "lazy";
+        img.onerror = () => {
+          iconWrap.replaceChildren();
+          const fallback = document.createElement("span");
+          fallback.className = "fallback";
+          fallback.textContent = (platform.name.trim()[0] || "?").toUpperCase();
+          iconWrap.appendChild(fallback);
+        };
+        iconWrap.appendChild(img);
+
+        const title = document.createElement("h2");
+        title.textContent = platform.name;
+        const description = document.createElement("p");
+        description.textContent = platform.description;
+
+        link.append(iconWrap, title, description);
+        grid.appendChild(link);
+      });
+
+      if (matchingPlatforms.length === 0) {
+        const empty = document.createElement("p");
+        empty.textContent = "No platforms found. Try another search.";
+        empty.style.color = "var(--muted)";
+        grid.appendChild(empty);
+      }
+    }
+
+    search.addEventListener("input", () => renderPlatforms(search.value));
+    renderPlatforms();
+  </script>
+</body>
+</html>
