@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -330,6 +329,32 @@
         Use official streaming providers where available.
       </p>
     </section>
+    
+    
+    <div class="section-divider"></div>
+
+    <!-- BROWSER GAMES SECTION -->
+    <section class="section" id="games">
+      <div class="section-heading">
+        <div class="section-icon" aria-hidden="true">🎮</div>
+        <h2>Browser Games</h2>
+        <p>
+          Play free online games instantly. Explore action,
+          racing, puzzle, multiplayer, and arcade games.
+        </p>
+      </div>
+
+      <div
+        class="grid"
+        id="gamesGrid"
+        aria-label="Browser gaming websites"
+      ></div>
+
+      <p class="hint">
+        Click a game website to start playing in a new tab.
+      </p>
+    </section>
+
 
     <p class="hint">
       Enjoy browsing your favorite streaming websites!
@@ -451,7 +476,7 @@
       },
       {
         name: "TARJETA ROJA TV",
-        url: "https://tarjetarojatv.la",
+        url: "https://tarjetarojatv.la0",
         icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfmY7iRgKavRqvkEHqC6XXNFkFepD81l1nf6CT3cfqONP2NVuW3GO8-EM&s=10",
         description: "Soccer matches live in Spanish"
       },
@@ -486,6 +511,64 @@
         description: "Sports live with no ads and highlights included"
       },
     ];
+    
+    
+    // =====================================================
+    // BROWSER GAME WEBSITES
+    // =====================================================
+
+    const gamesPlatforms = [
+      {
+        name: "Poki",
+        url: "https://poki.com/",
+        icon: "https://www.google.com/s2/favicons?domain=poki.com&sz=128",
+        description: "Free online games for everyone"
+      },
+      {
+        name: "CrazyGames",
+        url: "https://www.crazygames.com/",
+        icon: "https://www.google.com/s2/favicons?domain=crazygames.com&sz=128",
+        description: "Action, racing, and multiplayer games"
+      },
+      {
+        name: "Y8 Games",
+        url: "https://www.y8.com/",
+        icon: "https://www.google.com/s2/favicons?domain=y8.com&sz=128",
+        description: "Arcade, sports, and classic games"
+      },
+      {
+        name: "GamePix",
+        url: "https://www.gamepix.com/",
+        icon: "https://www.google.com/s2/favicons?domain=gamepix.com&sz=128",
+        description: "Discover free browser games"
+      },
+      {
+        name: "Agar.io",
+        url: "https://agar.io/",
+        icon: "https://www.google.com/s2/favicons?domain=agar.io&sz=128",
+        description: "Multiplayer arena game"
+      },
+      {
+        name: "Slither.io",
+        url: "https://slither.io/",
+        icon: "https://www.google.com/s2/favicons?domain=slither.io&sz=128",
+        description: "Grow your snake and compete"
+      },
+          {
+        name: "Orbit",
+        url: "https://orbitspace.b-cdn.net/orbit.svg",
+        icon: "https://orbitspace.b-cdn.net/releases/beta-20261003-3/assets/orbit/logo.svg",
+        description: "4,000+ different games, movies, music, and a browser"
+      },
+                {
+        name: "Playhop",
+        url: "https://playhop.com/",
+        icon: "https://yastatic.net/s3/games-static/favicons/playhop/apple-touch-icon.png",
+        description: "Play hundreds of different games and earn hops"
+      },
+      
+    ];
+
 
     // =====================================================
     // RENDER BOTH SECTIONS
@@ -493,6 +576,7 @@
     // =====================================================
 
     const search = document.getElementById("search");
+
 
     const sections = [
       {
@@ -502,8 +586,13 @@
       {
         platforms: sportsPlatforms,
         grid: document.getElementById("sportsGrid")
+      },
+      {
+        platforms: gamesPlatforms,
+        grid: document.getElementById("gamesGrid")
       }
     ];
+
 
     function createCard(platform) {
       const link = document.createElement("a");
