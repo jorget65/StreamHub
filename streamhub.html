@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamHub | My Streaming Sites</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+
+  <style>
+    :root {
+      --bg: #090d19;
+      --panel: #121a2d;
+      --text: #f5f7ff;
+      --muted: #aab5d0;
+      --accent: #8b5cf6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-color: #8b5cf6 #090d19;
+      scrollbar-width: thin;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(ellipse at top left, #27205c 0, transparent 36%),
+        radial-gradient(ellipse at bottom right, #102f67 0, transparent 32%),
+        var(--bg);
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #090d19;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(
+        180deg, #a78bfa, #8b5cf6, #6d28d9
+      );
+      border-radius: 10px;
+      border: 2px solid #090d19;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #c4b5fd;
+    }
+
+    header {
+      text-align: center;
+      padding: 42px 20px 22px;
+    }
+
+    .brand {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+    }
+
+    .brand span {
+      color: #a78bfa;
+    }
+
+    header p {
+      color: var(--muted);
+      margin: 12px auto 0;
+      max-width: 620px;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1120px, 94%);
+      margin: 0 auto 55px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 20px 0 28px;
+    }
+
+    #search {
+      width: min(360px, 100%);
+      padding: 13px 16px;
+      border: 1px solid #34415e;
+      border-radius: 12px;
+      background: #10182a;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    #search:focus {
+      border-color: #a78bfa;
+    }
+
+    .section {
+      margin-top: 44px;
+      scroll-margin-top: 20px;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin: 0 0 24px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      margin: 0 0 10px;
+      letter-spacing: -0.6px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 auto;
+      max-width: 600px;
+    }
+
+    .section-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #7c3aed, #2563eb);
+      font-size: 1.6rem;
+      box-shadow: 0 8px 24px #0004;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      padding: 24px 16px 20px;
+      border: 1px solid #27334e;
+      border-radius: 20px;
+      background: rgba(18, 26, 45, .88);
+      min-height: 235px;
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-5px);
+      border-color: #9b87ff;
+      background: #19223a;
+      outline: none;
+    }
+
+    .icon-wrap {
+      width: 112px;
+      height: 112px;
+      border-radius: 25px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      background: linear-gradient(145deg, #7c3aed, #2563eb);
+      box-shadow: 0 10px 30px #0005;
+      flex-shrink: 0;
+    }
+
+    .icon-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .fallback {
+      font-size: 3.2rem;
+      font-weight: 800;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: .92rem;
+    }
+
+    .hint {
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.6;
+      margin: 28px 0 0;
+    }
+
+    .section-divider {
+      height: 1px;
+      margin: 52px auto 0;
+      width: 85%;
+      background: linear-gradient(
+        90deg, transparent, #6655b9, #344d81, transparent
+      );
+    }
+
+    footer {
+      text-align: center;
+      color: #8390ad;
+      font-size: .85rem;
+      line-height: 1.6;
+      padding: 0 16px 28px;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding-top: 30px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .card {
+        padding: 17px 10px;
+        min-height: 205px;
+      }
+
+      .icon-wrap {
+        width: 82px;
+        height: 82px;
+        border-radius: 19px;
+      }
+
+      .section {
+        margin-top: 34px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="brand">▶ Stream<span>Hub</span></div>
+    <p>
+      All your favorite streaming platforms in one place.
+      Choose a big icon to open a website.
+    </p>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <input
+        id="search"
+        type="search"
+        placeholder="Search all platforms..."
+        aria-label="Search all platforms"
+      >
+    </div>
+
+    <!-- MOVIES AND TV SECTION -->
+    <section class="section" id="movies">
+      <div class="section-heading">
+        <div class="section-icon" aria-hidden="true">🎬</div>
+        <h2>Movie &amp; TV Streaming Websites</h2>
+        <p>Find your favorite movies, shows, anime, and dramas.</p>
+      </div>
+
+      <div
+        class="grid"
+        id="platformGrid"
+        aria-label="Movie and TV streaming websites"
+      ></div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- SPORTS SECTION -->
+    <section class="section" id="sports">
+      <div class="section-heading">
+        <div class="section-icon" aria-hidden="true">🏆</div>
+        <h2>Sport Streaming Websites</h2>
+        <p>
+          Explore sports platforms for live matches, highlights,
+          replays, and sports coverage.
+        </p>
+      </div>
+
+      <div
+        class="grid"
+        id="sportsGrid"
+        aria-label="Sports streaming websites"
+      ></div>
+
+      <p class="hint">
+        Sports availability varies by region and service.
+        Use official streaming providers where available.
+      </p>
+    </section>
+    
+    
+    <div class="section-divider"></div>
+
+    <!-- BROWSER GAMES SECTION -->
+    <section class="section" id="games">
+      <div class="section-heading">
+        <div class="section-icon" aria-hidden="true">🎮</div>
+        <h2>Browser Games</h2>
+        <p>
+          Play free online games instantly. Explore action,
+          racing, puzzle, multiplayer, and arcade games.
+        </p>
+      </div>
+
+      <div
+        class="grid"
+        id="gamesGrid"
+        aria-label="Browser gaming websites"
+      ></div>
+
+      <p class="hint">
+        Click a game website to start playing in a new tab.
+      </p>
+    </section>
+
+
+    <p class="hint">
+      Enjoy browsing your favorite streaming websites!
+    </p>
+  </main>
+
+  <footer>
+    StreamHub is an independent website launcher and is not
+    affiliated with the services listed.
+  </footer>
+
+  <script>
+    // =====================================================
+    // MOVIE & TV WEBSITES
+    // Edit the name, URL, icon, and description.
+    // =====================================================
+
+    const platforms = [
+      {
+        name: "Atlantic",
+        url: "https://atlantic.st",
+        icon: "https://static.vecteezy.com/system/resources/previews/015/576/178/non_2x/a-letter-logo-template-vector.jpg",
+        description: "TV Shows, Movies, and Dramas"
+      },
+      {
+        name: "Nippleflix",
+        url: "https://nippleflix.com/",
+        icon: "https://nippleflix.live/logo.png",
+        description: "Movies, TV shows, and Originals"
+      },
+      {
+        name: "Nova",
+        url: "https://novahd.cc",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8vxpqvpLGE6NRNgRFZgf26hFcNJvpqt7EIqL_5qRux7aatu4lgHQmHcc&s=10",
+        description: "TV, Movies, and Entertainment"
+      },
+      {
+        name: "Cinemove",
+        url: "https://cinemove.cc",
+        icon: "https://media.istockphoto.com/id/1479726048/vector/minimal-cm-logo-icon-of-a-mc-letter-on-a-luxury-background-logo-idea-based-on-the-cm.jpg?s=612x612&w=0&k=20&c=F2JivWF06R9SLjXN1GGqKcROYX09Q-fALuISv5TSt-E=",
+        description: "Movies, Series, and TV Shows"
+      },
+      {
+        name: "Cuevana",
+        url: "https://cuevana3r.pro",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdbgXQn8Q-eGi-g7KPVIW02j0LvpHoz8ppPA2-x_FV_p4ntdPo8sIcMrTW&s=10",
+        description: "Movies and TV Shows in Spanish"
+      },
+      {
+        name: "Movish",
+        url: "https://movish.to",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgTxVq17mRWpXPVjiNKsxrJ-veMXcWTA9DB2QLDOHziaR2DVRirrgALiL5&s=10",
+        description: "TV Shows, Movies, and Originals"
+      },
+      {
+        name: "Bingr",
+        url: "https://bingr.one",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDbRC7VFzxuLZHtgVFlo2h6gEH8wwAln7nrDDceOvWi6rCd489wGO1cVcF&s=10",
+        description: "Anime, Movies, and TV Shows"
+      },
+      {
+        name: "Z Stream",
+        url: "https://zxcstream.com",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5TqnhXX_a9JL_uN4F2yJg3l2j_MS8i6Xzw-EP8O1kdO1vDdGtk12mkq5G&s=100",
+        description: "Romance, TV Shows, and Movies"
+      },
+      {
+        name: "Cinetaro",
+        url: "https://cinetaro.to",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnFF4cBWKuxX9w_aLTRpQ16LpJEWtI1VU2EThawLy4snXTQY2FfVjpbR2m&s=10",
+        description: "Romance, TV Shows, Movies, and Anime"
+      },
+      {
+        name: "Moviebite",
+        url: "https://moviebite.org",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoNiDmIZEvBf5cqrvQCEDKv94xCbTA8y0vIbxJ8WfipayakJqUC5A3dis&s=10",
+        description: "Originals, Anime, Movies, and TV Shows"
+      },
+            {
+        name: "Cinemaos",
+        url: "https://cinemaos.live",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdykAx_aSY62QS4SFEDVjFzaENdn-s24utrqvtBLwa49u9rE35TT0uQQo&s=10",
+        description: "Originals, Anime, Movies, TV Shows and more"
+      },
+                  {
+        name: "AYCW",
+        url: "https://allyoucanwatch.net",
+        icon: "https://play-lh.googleusercontent.com/eef7eV2EkRxGgbmfeOweqS2a7OZXfyW29W0oUEq9dpKhk782Jf9LeP0s_F9c3boKuzBfB_3YIm-MYP5L5GulRA",
+        description: "Thousands of TV Shows and Movies"
+      },
+                        {
+        name: "SvStream",
+        url: "https://svstream.cc",
+        icon: "https://m.media-amazon.com/images/I/61lM1HLLQUL.jpg",
+        description: "Originals, Drama Shows, TV Shows, and Movies"
+      },
+                              {
+        name: "HiveX",
+        url: "https://hivex.stream",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz3CvZ9-zQC2w2E9Bf6aYddaYKmJntR5o82Rlq3YJvFiWLqXkpTst0pROz&s=10",
+        description: "TV Shows, Movies, Anime, and Reality Shows"
+      },
+                                    {
+        name: "Nexa",
+        url: "https://nexa.mov",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Maruti_Suzuki_NEXA.jpg",
+        description: "Anime, Exclusives, TV Shows, and Movies"
+      },
+    ];
+
+    // =====================================================
+    // SPORTS WEBSITES
+    //
+    // Replace these examples with the sports websites you use.
+    //
+    // name:        Name shown on the card
+    // url:         Website opened when the card is clicked
+    // icon:        Direct URL to a PNG, JPG, WEBP, or SVG image
+    // description: Text displayed underneath the name
+    //
+    // To add another website, copy one entire object,
+    // paste it inside this array, and change the details.
+    // =====================================================
+
+    const sportsPlatforms = [
+      {
+        name: "StreamEast",
+        url: "https://streameasto.cx",
+        icon: "https://pbs.twimg.com/profile_images/2064079531288244224/FeYlg7VS_400x400.jpg",
+        description: "Every live sport event happening right now!"
+      },
+      {
+        name: "StreamKing",
+        url: "https://streamking.cx",
+        icon: "https://www.jaarbeurs.nl/wp-content/uploads/2025/01/favicon-jaarbeurs.png",
+        description: "Sports, scores, and highlights"
+      },
+      {
+        name: "Tarjeta Roja",
+        url: "https://tarjetarojatvonline.site",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWj-pwF6kDI568Sa4qtGDKur3f83R7ap_AsXTdVzoH2Jm0ssC7k4frZxc&s=10",
+        description: "Soccer matches live in Spanish"
+      },
+      {
+        name: "ROJADIRECTA TV",
+        url: "https://www.rojadirectatv.city",
+        icon: "https://play-lh.googleusercontent.com/nM8WLAE5cAnNHheTXXjxCVJy4U1iHqfzXXhGCLREGdDhs7FfgK3ktkhn36KxsPOokFdL89zeVTMO8yHZ7XtR",
+        description: "Sport matches live in Spanish"
+      },
+      {
+        name: "TARJETA ROJA TV",
+        url: "https://tarjetarojatv.la0",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfmY7iRgKavRqvkEHqC6XXNFkFepD81l1nf6CT3cfqONP2NVuW3GO8-EM&s=10",
+        description: "Soccer matches live in Spanish"
+      },
+      {
+        name: "TimStreams",
+        url: "https://timst.top",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL-C5SKywCy7-ndP6nPfvnR6VdkeJSVm30wZ2zXXt5oQ&s=10",
+        description: "Sports and scores live in English"
+      },
+      {
+        name: "Streamed",
+        url: "https://streamed.pk",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ53rwmiA0njhAJNM8Rxyik6BVF-rDDKzrYhMKOIJEYbK6v17BdDWI4cRQ&s=10",
+        description: "Multiple sports live and scores"
+      },
+      {
+        name: "PPV",
+        url: "https://ppv.st",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAGzS9ZpI4Fd4l-K5AQXAI9c8ZvT8lsAdQOtjIhIqMOZOemYSVeWajQcMj&s=10",
+        description: "Variety of different sports live and highlights"
+      },
+            {
+        name: "ZLIVE",
+        url: "https://zlive.st",
+        icon: "https://static.vecteezy.com/system/resources/thumbnails/070/730/570/small_2x/shiny-purple-play-button-icon-with-blue-glow-for-media-and-entertainment-png.png",
+        description: "Variety of different sports live, highlights, and scores"
+      },
+            {
+        name: "DAMITV",
+        url: "https://damitv.st",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvG4NXHZicthRZjN_5fDS4wE--xGbUW1ri7AXutpgFCiVkOD5GBOeAhRE&s=10",
+        description: "Sports live with no ads and highlights included"
+      },
+                  {
+        name: "Sportsurge",
+        url: "https://v2.sportsurge.net",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDdzAntQv1CG8Gyz-2bS2ayEd4Xb9BoTYvQx-gVQ4f0A&s=10",
+        description: "Every match live just in one site"
+      },
+                        {
+        name: "Matchora",
+        url: "https://matchora.to",
+        icon: "https://play-lh.googleusercontent.com/myejMq-2EmcL5cC2NGZSP4C2Trnuk9ItEH2bv3UFDdxtKFKUZ06OGVVx0K0di_UCj2FluNOElj1xyqdRTGrW3rY=s0-br30",
+        description: "F1, Baseball, Basketball, and Football all live"
+      },
+                              {
+        name: "Rerace",
+        url: "https://www.rerace.net/sports",
+        icon: "https://s3-media0.fl.yelpcdn.com/bphoto/HR5yNJqOBs4QaYFC6K5KpA/348s.jpg",
+        description: "Live scores, live sports, and highlights"
+      },
+                                    {
+        name: "Pirlo TV",
+        url: "https://pirlotv.la",
+        icon: "https://f4.bcbits.com/img/a2651677526_10.jpg",
+        description: "Live scores, live sports, and highlights all in spanish"
+      },
+                                          {
+        name: "Tarjeta Roja TV",
+        url: "https://pirlotv.la",
+        icon: "https://play-lh.googleusercontent.com/Zq0V7a7pNwbLUNuZMjrOS9tVqook0a12qKJuFZ5Der8U0Pg_uZNr6QdlNZq-FVecjuLk_disDROGkxMr1Qj-Ag=w240-h480-rw",
+        description: "Soccer live matches and scores in spanish"
+      },
+      
+    ];
+    
+    
+    // =====================================================
+    // BROWSER GAME WEBSITES
+    // =====================================================
+
+    const gamesPlatforms = [
+      {
+        name: "Poki",
+        url: "https://poki.com",
+        icon: "https://pbs.twimg.com/profile_images/966625671849095168/V5JiKZ6x_400x400.jpg",
+        description: "Free online games for everyone"
+      },
+      {
+        name: "CrazyGames",
+        url: "https://www.crazygames.com",
+        icon: "https://play-lh.googleusercontent.com/XUbElKnsGZ-_rqyvCPdve-_IkzYke9R_VYtkpYW7XVcCdqWGCXXKU6CNt41zh3N4GSIkLse82ywuYO0_OO403JQ=s0-br30",
+        description: "Action, racing, and multiplayer games"
+      },
+      {
+        name: "Y8 Games",
+        url: "https://www.y8.com",
+        icon: "https://play-lh.googleusercontent.com/y1FFnZAfLRMc2Y39jL10clGxk9UmMDc0kVPBDOQi7TKbzZdPjvT7jsTFQtBiVDLDLJiaUs_0d16TBv57jFlIiQ",
+        description: "Arcade, sports, and classic games"
+      },
+      {
+        name: "GamePix",
+        url: "https://www.gamepix.com",
+        icon: "https://pbs.twimg.com/profile_images/1909539370366889984/OE-c6XHf_400x400.jpg",
+        description: "Discover free browser games"
+      },
+      {
+        name: "Agar.io",
+        url: "https://agar.io",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStd0NmSjZTbUH1R9FzUTOxt83ZaBV_dlVv7RIsQEpoCw&s=10",
+        description: "Multiplayer arena game"
+      },
+      {
+        name: "Slither.io",
+        url: "https://slither.io",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt9Xqt2sw8P7jXarq50YyXyUtefUhC50PtI2szo9f_eX7TESHa1QiCLgA&s=10",
+        description: "Grow your snake and compete"
+      },
+          {
+        name: "Orbit",
+        url: "https://orbitspace.b-cdn.net/orbit.svg",
+        icon: "https://orbitspace.b-cdn.net/releases/beta-20261003-3/assets/orbit/logo.svg",
+        description: "4,000+ different games, movies, music, and a browser"
+      },
+                {
+        name: "Playhop",
+        url: "https://playhop.com",
+        icon: "https://yastatic.net/s3/games-static/favicons/playhop/apple-touch-icon.png",
+        description: "Play hundreds of different games and earn hops"
+      },
+                      {
+        name: "Cool Math Games",
+        url: "https://www.coolmathgames.com",
+        icon: "https://play-lh.googleusercontent.com/I3hW7sKSGtOKeTpmsBxka7Eyul5HXTZUD4H3EbJEWyW-4vDlpyEG5Jtu9D8JgR0__g",
+        description: "Educational math games.. Or are they educational?"
+      },
+                            {
+        name: "Addicting Games",
+        url: "https://www.addictinggames.com",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-7RnurevJHoMkw8ZlvNpXlI03KVZ8j7gJUPuCQi2EqY1DJv4B3fWsxNmE&s=10",
+        description: "5,000 Games online all for free"
+      },
+                                  {
+        name: "MSN Games",
+        url: "https://www.msn.com/play",
+        icon: "https://cdn.myimgs.org/images/62451/IMG_5004.png",
+        description: "Thousands of free online games by Microsoft"
+      },
+                                        {
+        name: "Kizi",
+        url: "https://kizi.com/",
+        icon: "https://kizicdn.com/assets/common/kizi_avatar-1190a53923202c45cd60a459fbcaf3543842718d24dc8a2e6f590b5bfb4fae0b.png",
+        description: "Play over 100 different games online"
+      },
+                                              {
+        name: "SilverGames",
+        url: "https://www.silvergames.com",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEbQSRVoxx1c7FwjakkTzovAlXKRtfa0kngzD84Wonua1vYuMUOQ3iBm8b&s=10",
+        description: "Free browser games for instant play and entertainment"
+      },
+                                                    {
+        name: "MiniPlay",
+        url: "https://www.miniplay.com",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJEKG5TlZDxEu0oSrNWD5gNWQbz7NjCTrEEbh8H5Qk4Q&s=10",
+        description: "A diverse collection of free arcade and puzzle games"
+      },
+                                                       {
+        name: "Kongregate",
+        url: "https://www.kongregate.com",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6bqbmu9hGIEMxfkV0jgHB5tebBKuEluY39dQmqF7gbA&s=10",
+        description: "A popular community hub for playing free indie games"
+      },
+                                                          {
+        name: "GameMonitize",
+        url: "https://gamemonetize.com",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY9XLc8L5ry9m6GX7vBdM4h0jsGabMJ-rWd6CEXLKpNypA72XgfBSvooE&s=10",
+        description: "Free browser game platform with monetization for HTML5 developers"
+      },
+      
+      
+    ];
+
+
+    // =====================================================
+    // RENDER BOTH SECTIONS
+    // You normally do not need to edit below this line.
+    // =====================================================
+
+    const search = document.getElementById("search");
+
+
+    const sections = [
+      {
+        platforms: platforms,
+        grid: document.getElementById("platformGrid")
+      },
+      {
+        platforms: sportsPlatforms,
+        grid: document.getElementById("sportsGrid")
+      },
+      {
+        platforms: gamesPlatforms,
+        grid: document.getElementById("gamesGrid")
+      }
+    ];
+
+
+    function createCard(platform) {
+      const link = document.createElement("a");
+      link.className = "card";
+      link.href = platform.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.setAttribute(
+        "aria-label",
+        `Open ${platform.name} in a new tab`
+      );
+
+      const iconWrap = document.createElement("div");
+      iconWrap.className = "icon-wrap";
+      iconWrap.setAttribute("aria-hidden", "true");
+
+      const img = document.createElement("img");
+      img.src = platform.icon;
+      img.alt = "";
+      img.loading = "lazy";
+
+      img.onerror = () => {
+        iconWrap.replaceChildren();
+
+        const fallback = document.createElement("span");
+        fallback.className = "fallback";
+        fallback.textContent =
+          (platform.name.trim()[0] || "?").toUpperCase();
+
+        iconWrap.appendChild(fallback);
+      };
+
+      iconWrap.appendChild(img);
+
+      const title = document.createElement("h3");
+      title.textContent = platform.name;
+
+      const description = document.createElement("p");
+      description.textContent = platform.description;
+
+      link.append(iconWrap, title, description);
+
+      return link;
+    }
+
+    function renderPlatforms() {
+      const filter = search.value.trim().toLowerCase();
+
+      sections.forEach(section => {
+        const grid = section.grid;
+        grid.replaceChildren();
+
+        const matchingPlatforms = section.platforms.filter(platform =>
+          (
+            platform.name + " " + platform.description
+          ).toLowerCase().includes(filter)
+        );
+
+        matchingPlatforms.forEach(platform => {
+          grid.appendChild(createCard(platform));
+        });
+
+        if (matchingPlatforms.length === 0) {
+          const empty = document.createElement("p");
+          empty.textContent = filter
+            ? "No matching websites in this section."
+            : "No websites have been added yet.";
+
+          empty.style.color = "var(--muted)";
+          grid.appendChild(empty);
+        }
+      });
+    }
+
+    search.addEventListener("input", renderPlatforms);
+
+    renderPlatforms();
+  </script>
+</body>
+</html>
